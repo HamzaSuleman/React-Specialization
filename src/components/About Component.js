@@ -61,14 +61,14 @@ function About(props) {
                         </CardBody>
                     </Card>
                 </div>
-                
+
             </div>
-            <hr/>
+            <hr />
             <div className="row row-content">
                 <div className="col-12 my-4">
                     <h2>Corporate Leadership</h2>
                 </div>
-                <hr/>
+                <hr />
                 <div className="col-12">
                     <Media list>
                         {leaders}
