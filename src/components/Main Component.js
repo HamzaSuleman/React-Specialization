@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react';
-import { Routes, Route, Navigate, useParams} from 'react-router-dom';
+import { Routes, Route, Navigate, useParams, withRouter} from 'react-router-dom';
 import Menu from './Menu Component';
 import Contact from './Contact Component';
 import Home from './Home Component';
@@ -8,26 +8,18 @@ import Header from './Header Component';
 import DishDetail from './DishDetail Component';
 import About from './About Component';
 import Footer from './Footer Component';
-import { DISHES } from '../shared/dishes'
-import { LEADERS } from '../shared/leaders'
-import { PROMOTIONS } from '../shared/promotions'
-import { COMMENTS } from '../shared/comments'
+import { connect } from 'react-redux';
 
+const mapStateToProps = state => {
+    return {
+      dishes: state.dishes,
+      comments: state.comments,
+      promotions: state.promotions,
+      leaders: state.leaders
+    }
+  }
 
 class Main extends Component {
-
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            dishes: DISHES,
-            comments: COMMENTS,
-            promotions: PROMOTIONS,
-            leaders: LEADERS
-        };
-
-        console.log("Constructor Called...")
-    }
 
     ondishSelect(dish) {
         this.setState({ selectedDish: dish });
@@ -48,17 +40,17 @@ class Main extends Component {
                 <Header />
                 <Routes>
                     <Route path='/home' element={<Home 
-                    dish={this.state.dishes.filter((dish) => dish.featured)[0]}
-                    promotion={this.state.promotions.filter((promo) => promo.featured)[0]}
-                    leader={this.state.leaders.filter((leader) => leader.featured)[0]}/>
+                    dish={this.props.dishes.filter((dish) => dish.featured)[0]}
+                    promotion={this.props.promotions.filter((promo) => promo.featured)[0]}
+                    leader={this.props.leaders.filter((leader) => leader.featured)[0]}/>
                     } />
 
-                    <Route exact path='/menu' element={<Menu dishes={this.state.dishes}/>} />
-                    <Route path='/menu/:dishId' element={<DishDetail dishes={this.state.dishes} comments={this.state.comments} />} />
+                    <Route exact path='/menu' element={<Menu dishes={this.props.dishes}/>} />
+                    <Route path='/menu/:dishId' element={<DishDetail dishes={this.props.dishes} comments={this.props.comments} />} />
 
                     <Route path='/contact' element={<Contact />} />
                     
-                    <Route path='/about' element={<About leaders={LEADERS}/>} />
+                    <Route path='/about' element={<About leaders={this.props.leaders}/>} />
 
                     <Route path="*" element={<Navigate to="/home" replace />} />
                 </Routes>
@@ -68,7 +60,7 @@ class Main extends Component {
     }
 }
 
-export default Main;
+export default connect(mapStateToProps)(Main);
 
 
 /*const DishWithId = () => {
