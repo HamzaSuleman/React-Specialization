@@ -1,9 +1,10 @@
 import React from "react";
 import {
   Card, CardImg, CardText, CardBody,
-  CardTitle, CardImgOverlay, Breadcrumb, BreadcrumbItem
+  CardTitle,  Breadcrumb, BreadcrumbItem
 } from 'reactstrap';
 import { Link, useParams } from 'react-router-dom';
+import CommentForm from "./CommentForm";
 
 const DishDetail = (props) => {
 
@@ -32,19 +33,24 @@ const DishDetail = (props) => {
           <RenderMenuItem dish={dish} />
         </div>
         <div className="col-12 col-md-5 m-1">
-          <RenderDishComments comments={comments} />
+        <Card className='p-2'>
+          <CardBody>
+            <RenderDishComments comments={comments} />
+            <CommentForm className='my-2'/>
+          </CardBody> 
+        </Card>
+       
         </div>
       </div>
     </div>
   );
-
 
   function CalculateRating({ comments }) {
     var rating = 0;
     for (let i = 0; i < comments.length; i++) {
       rating += comments[i].rating;
     }
-    return <CardImgOverlay><i><b>Rating: </b> {rating / 5}</i></CardImgOverlay>
+    return <i><b>Average Rating: </b> {rating / 5}</i>
   }
 
 
@@ -78,15 +84,17 @@ const DishDetail = (props) => {
 
     return <div className='col-md-12 '>
 
-      <Card className='p-2'>
-        <CardBody>
+      
+        <CardText ><CalculateRating comments={comments}/></CardText>
           <CardTitle>
             <i><h4>Comments</h4></i>
             <hr />
           </CardTitle>
-          <CardText>{commentsList}</CardText>
-        </CardBody>
-      </Card>
+          
+          <CardText>
+              {commentsList}
+          </CardText>
+      
     </div>
   }
 }

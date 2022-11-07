@@ -20,8 +20,8 @@ class Header extends Component {
 
     this.state = {
       isNavOpen: false,
-      isModalLoginOpen: false,
-      isModalRegisterOpen: false
+      isLoginOpen: false,
+      isRegisterOpen: false
     };
   }
 
