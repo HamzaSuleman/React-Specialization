@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react';
-import { Routes, Route, Navigate, useParams, withRouter} from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import Menu from './Menu Component';
 import Contact from './Contact Component';
 import Home from './Home Component';
