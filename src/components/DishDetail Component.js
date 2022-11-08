@@ -1,10 +1,11 @@
 import React from "react";
 import {
   Card, CardImg, CardText, CardBody,
-  CardTitle,  Breadcrumb, BreadcrumbItem
+  CardTitle, Breadcrumb, BreadcrumbItem
 } from 'reactstrap';
 import { Link, useParams } from 'react-router-dom';
 import CommentForm from "./CommentForm";
+import { Loading } from './LoadingComponent';
 
 const DishDetail = (props) => {
 
@@ -14,6 +15,25 @@ const DishDetail = (props) => {
   const dish = props.dishes.filter((dish) => dish.id === id)[0]
   const comments = props.comments.filter((comment) => comment.dishId === id)
 
+  if (props.isLoading) {
+    return(
+        <div className="container">
+            <div className="row">            
+                <Loading />
+            </div>
+        </div>
+    );
+}
+else if (props.errMess) {
+    return(
+        <div className="container">
+            <div className="row">            
+                <h4>{props.errMess}</h4>
+            </div>
+        </div>
+    );
+}
+else if (dish != null) {
 
   return (
     <div className="container">
@@ -21,7 +41,7 @@ const DishDetail = (props) => {
         <Breadcrumb className='my-4'>
 
           <BreadcrumbItem ><Link to="/menu">Menu</Link></BreadcrumbItem>
-          <BreadcrumbItem  active>{dish.name}</BreadcrumbItem>
+          <BreadcrumbItem active>{dish.name}</BreadcrumbItem>
         </Breadcrumb>
         <div className="col-12">
           <h3>{dish.name}</h3>
@@ -33,24 +53,25 @@ const DishDetail = (props) => {
           <RenderMenuItem dish={dish} />
         </div>
         <div className="col-12 col-md-5 m-1">
-        <Card className='p-2'>
-          <CardBody>
-            <RenderDishComments comments={comments} />
-            <CommentForm className='my-2'/>
-          </CardBody> 
-        </Card>
-       
+          <Card className='p-2'>
+            <CardBody>
+              <RenderDishComments comments={comments}  />
+              
+              <CommentForm addComment={props.addComment} dishId={dishId}  className='my-2'/>
+            </CardBody>
+          </Card>
+
         </div>
       </div>
     </div>
-  );
+  );}
 
   function CalculateRating({ comments }) {
     var rating = 0;
     for (let i = 0; i < comments.length; i++) {
       rating += comments[i].rating;
     }
-    return <i><b>Average Rating: </b> {rating / 5}</i>
+    return <i><b>Average Rating: </b> {rating / comments.length}</i>
   }
 
 
@@ -84,17 +105,17 @@ const DishDetail = (props) => {
 
     return <div className='col-md-12 '>
 
-      
-        <CardText ><CalculateRating comments={comments}/></CardText>
-          <CardTitle>
-            <i><h4>Comments</h4></i>
-            <hr />
-          </CardTitle>
-          
-          <CardText>
-              {commentsList}
-          </CardText>
-      
+
+      <CardText ><CalculateRating comments={comments} /></CardText>
+      <CardTitle>
+        <i><h4>Comments</h4></i>
+        <hr />
+      </CardTitle>
+
+      <CardText>
+        {commentsList}
+      </CardText>
+
     </div>
   }
 }

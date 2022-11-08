@@ -9,6 +9,16 @@ import DishDetail from './DishDetail Component';
 import About from './About Component';
 import Footer from './Footer Component';
 import { connect } from 'react-redux';
+import { actions } from 'react-redux-form';
+import { addComment, fetchDishes } from '../redux/ActionCreators';
+
+
+const mapDispatchToProps = dispatch => ({
+  
+    addComment: (dishId, rating, author, comment) => dispatch(addComment(dishId, rating, author, comment)),
+    fetchDishes: () => { dispatch(fetchDishes()) },
+    resetFeedbackForm: () => { dispatch(actions.reset('feedback'))}
+  });
 
 const mapStateToProps = state => {
     return {
@@ -26,8 +36,8 @@ class Main extends Component {
     }
 
     componentDidMount() {
-        console.log("Compoenent Did Mount Called...")
-    }
+        this.props.fetchDishes();
+      }
     /* UNSAFE_componentWillMount()
      {
          console.log("Compoenent Will Mount Called...")   
@@ -40,15 +50,22 @@ class Main extends Component {
                 <Header />
                 <Routes>
                     <Route path='/home' element={<Home 
-                    dish={this.props.dishes.filter((dish) => dish.featured)[0]}
+                    dish={this.props.dishes.dishes.filter((dish) => dish.featured)[0]}
+                    dishesLoading={this.props.dishes.isLoading}
+                    dishesErrMess={this.props.dishes.errMess}
                     promotion={this.props.promotions.filter((promo) => promo.featured)[0]}
                     leader={this.props.leaders.filter((leader) => leader.featured)[0]}/>
                     } />
 
                     <Route exact path='/menu' element={<Menu dishes={this.props.dishes}/>} />
-                    <Route path='/menu/:dishId' element={<DishDetail dishes={this.props.dishes} comments={this.props.comments} />} />
+                    
+                    <Route path='/menu/:dishId' element={<DishDetail dishes={this.props.dishes.dishes}
+                    isLoading={this.props.dishes.isLoading}
+                    errMess={this.props.dishes.errMess}
+                    comments={this.props.comments} addComment={this.props.addComment}/>} 
+                    />
 
-                    <Route path='/contact' element={<Contact />} />
+                    <Route exact path='/contact' element={<Contact resetFeedbackForm={this.props.resetFeedbackForm} />} />
                     
                     <Route path='/about' element={<About leaders={this.props.leaders}/>} />
 
@@ -60,7 +77,7 @@ class Main extends Component {
     }
 }
 
-export default connect(mapStateToProps)(Main);
+export default connect(mapStateToProps, mapDispatchToProps)(Main);
 
 
 /*const DishWithId = () => {
