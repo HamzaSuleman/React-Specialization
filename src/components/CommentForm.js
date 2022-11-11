@@ -57,7 +57,7 @@ class CommentForm extends Component {
 
     handleComment(event) {
         this.toggleCommentModal();
-        this.props.addComment(parseInt(this.props.dishId), parseInt(this.rating.value), this.name.value, this.textarea.value);
+        this.props.postComment(parseInt(this.props.dishId), parseInt(this.rating.value), this.name.value, this.textarea.value);
         /*alert(" Name: " + this.name.value + "\n Rating: " + this.rating.value
             + "\n Comment: " + this.textarea.value);*/
         event.preventDefault();

@@ -58,7 +58,7 @@ const DishDetail = (props) => {
               <CardBody>
                 <RenderDishComments comments={comments} />
 
-                <CommentForm addComment={props.addComment} dishId={dishId} className='my-2' />
+                <CommentForm postComment={props.postComment} dishId={dishId} className='my-2' />
               </CardBody>
             </Card>
 
