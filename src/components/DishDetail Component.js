@@ -7,6 +7,7 @@ import { Link, useParams } from 'react-router-dom';
 import CommentForm from "./CommentForm";
 import { Loading } from './LoadingComponent';
 import { baseUrl } from '../shared/baseUrl';
+import { FadeTransform, Fade, Stagger } from 'react-animation-components';
 
 const DishDetail = (props) => {
 
@@ -79,6 +80,11 @@ const DishDetail = (props) => {
 
   function RenderMenuItem({ dish }) {
     return (
+      <FadeTransform
+                in
+                transformProps={{
+                    exitTransform: 'scale(0.5) translateY(-50%)'
+                }}>
       <Card>
 
         <CardImg top src={baseUrl + dish.image} alt={dish.name} />
@@ -92,18 +98,20 @@ const DishDetail = (props) => {
 
 
       </Card>
+      </FadeTransform>
     );
   }
 
   function RenderDishComments({ comments }) {
-    const commentsList = comments.map((comment) => {
-      return <CardText key={comment.id} className='row col-sm-12 '>
+    const commentsList = <Stagger in>{comments.map((comment) => {
+      return <Fade in> <CardText key={comment.id} className='row col-sm-12 '>
         <div ><i><b>Name: </b>{comment.author}</i>,  <i><b>Rating:</b> {comment.rating}</i></div>
         <i><b>Date:</b> {new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit' }).format(new Date(Date.parse(comment.date)))}</i>
         <i><b>Comment:</b> {comment.comment}</i>
         <hr className='p-1 mt-2 mb-0' />
       </CardText>
-    });
+      </Fade>
+    })}</Stagger>
 
     return <div className='col-md-12 '>
 

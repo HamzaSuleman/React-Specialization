@@ -1,18 +1,12 @@
 
 import React, { Component } from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
-import Menu from './Menu Component';
-import Contact from './Contact Component';
-import Home from './Home Component';
 import Header from './Header Component';
-import DishDetail from './DishDetail Component';
-import About from './About Component';
 import Footer from './Footer Component';
 import { connect } from 'react-redux';
 import { actions } from 'react-redux-form';
 
-import { postComment, fetchDishes, fetchComments, fetchPromos } from '../redux/ActionCreators';
-
+import { postComment, postFeedback, fetchDishes, fetchComments, fetchPromos, fetchLeaders } from '../redux/ActionCreators';
+import { AnimatedRoutes } from './AnimatedRoutes';
 
 
 
@@ -22,7 +16,25 @@ const mapDispatchToProps = dispatch => ({
     fetchDishes: () => { dispatch(fetchDishes()) },
     resetFeedbackForm: () => { dispatch(actions.reset('feedback'))},
     fetchComments: () => dispatch(fetchComments()),
-    fetchPromos: () => dispatch(fetchPromos())
+    fetchPromos: () => dispatch(fetchPromos()),
+    fetchLeaders: () => dispatch(fetchLeaders()),
+
+    postFeedback: (
+      firstname,
+      lastname,
+      telnum,
+      email,
+      agree,
+      contactType,
+      message) => dispatch(postFeedback(
+        firstname,
+        lastname,
+        telnum,
+        email,
+        agree,
+        contactType,
+        message)),
+
   });
 
 const mapStateToProps = state => {
@@ -44,6 +56,7 @@ class Main extends Component {
       this.props.fetchDishes();
       this.props.fetchComments();
       this.props.fetchPromos();
+      this.props.fetchLeaders();
     }
     /* UNSAFE_componentWillMount()
      {
@@ -55,33 +68,14 @@ class Main extends Component {
         return (
             <div className="App">
                 <Header />
-                <Routes>
-                    <Route path='/home' element={<Home 
-                    dish={this.props.dishes.dishes.filter((dish) => dish.featured)[0]}
-                    dishesLoading={this.props.dishes.isLoading}
-                    dishesErrMess={this.props.dishes.errMess}
-                    promotion={this.props.promotions.promotions.filter((promo) => promo.featured)[0]}
-                    promoLoading={this.props.promotions.isLoading}
-                    promoErrMess={this.props.promotions.errMess}
-                    leader={this.props.leaders.filter((leader) => leader.featured)[0]}/>
-                    } />
-
-                    <Route exact path='/menu' element={<Menu dishes={this.props.dishes}/>} />
-                    
-                    <Route path='/menu/:dishId' element={<DishDetail dishes={this.props.dishes.dishes}
-                    isLoading={this.props.dishes.isLoading}
-                    errMess={this.props.dishes.errMess}
-                    comments={this.props.comments.comments}
-                    commentsErrMess={this.props.comments.errMess}
-                    postComment={this.props.postComment}/>} 
-                    />
-
-                    <Route exact path='/contact' element={<Contact resetFeedbackForm={this.props.resetFeedbackForm} />} />
-                    
-                    <Route path='/about' element={<About leaders={this.props.leaders}/>} />
-
-                    <Route path="*" element={<Navigate to="/home" replace />} />
-                </Routes>
+                <AnimatedRoutes dishes={this.props.dishes}
+                                comments={this.props.comments}
+                                promotions={this.props.promotions}
+                                leaders={this.props.leaders}
+                                postComment={this.props.postComment}
+                                postFeedback={this.props.postFeedback}
+                                resetFeedbackForm={this.props.resetFeedbackForm} 
+                                />
                 <Footer />
             </div>
         );

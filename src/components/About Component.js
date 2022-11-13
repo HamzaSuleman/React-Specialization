@@ -1,19 +1,32 @@
 import React from 'react';
 import { Breadcrumb, BreadcrumbItem, Card, CardBody, CardHeader, Media } from 'reactstrap';
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import {baseUrl} from '../shared/baseUrl'
+import { Loading } from './LoadingComponent';
+import { FadeTransform, Fade, Stagger } from 'react-animation-components';
 
 function About(props) {
 
-    const leaders = props.leaders.map((leader) => {
+    const leaders = <Stagger in>{props.leaders.map((leader) => {
+        
+        
         return (
-            <React.Fragment>
-                <RenderLeader leader={leader} />
-            </React.Fragment>
+            <Fade in> 
+                <RenderLeader leader={leader}/>
+            </Fade>
         );
-    });
+    })}</Stagger>
 
+    if(props.isLoading)
+    {return <div><Loading/></div>}
+   
     return (
-        <div className="container">
+        <motion.div className="container"
+        initial={{width:0}}
+        animate={{width:"100%"}}
+        exit={{x: window.innerWidth, transition: {duration:0.3}}}
+        >
             <div className="row">
                 <Breadcrumb className='my-4'>
                     <BreadcrumbItem><Link to="/home">Home</Link></BreadcrumbItem>
@@ -64,6 +77,11 @@ function About(props) {
 
             </div>
             <hr />
+            <FadeTransform
+                in
+                transformProps={{
+                    exitTransform: 'scale(0.5) translateY(-50%)'
+                }}>
             <div className="row row-content">
                 <div className="col-12 my-4">
                     <h2>Corporate Leadership</h2>
@@ -72,28 +90,31 @@ function About(props) {
                 <div className="col-12">
                     <Media list>
                         {leaders}
+                        
                     </Media>
                 </div>
             </div>
-        </div>
+            </FadeTransform>
+        </motion.div>
     );
 }
 
 export default About;
 
-function RenderLeader({ leader }) {
+function RenderLeader(props) {
+
     return (
         <React.Fragment>
             <div className='row mb-2'>
                 <div className='container-fluid my-4 col-2'>
-                    <img className='mt-1' width={'100px'} src={leader.image} />
+                <img src={baseUrl + props.leader.image} alt={props.leader.name} />
 
                 </div>
                 <div className='container-fluid my-4 col-4 col-sm-10'>
                     
-                        <Media heading className='mb-2'>{leader.name}</Media>
-                        <Media className='mb-2'>{leader.designation}</Media>
-                        <Media className='mb-2'>{leader.description}</Media>
+                        <Media heading className='mb-2'>{props.leader.name}</Media>
+                        <Media className='mb-2'>{props.leader.designation}</Media>
+                        <Media className='mb-2'>{props.leader.description}</Media>
                     
                 </div>
 

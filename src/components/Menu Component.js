@@ -5,6 +5,7 @@ import {
 } from 'reactstrap';
 import { Loading } from './LoadingComponent';
 import { baseUrl } from '../shared/baseUrl';
+import { motion } from 'framer-motion';
 
 
 const Menu = (props) => {
@@ -39,7 +40,11 @@ const Menu = (props) => {
   }
   else {
     return (
-      <div className="container">
+      <motion.div className="container"
+        initial={{width:0}}
+        animate={{width:"100%"}}
+        exit={{x: window.innerWidth, transition: {duration:0.3}}}
+      >
         <div className="row">
           <Breadcrumb className='my-4'>
             <BreadcrumbItem><Link to="/home">Home</Link></BreadcrumbItem>
@@ -53,7 +58,7 @@ const Menu = (props) => {
         <div className="row">
           {menu}
         </div>
-      </div>
+      </motion.div>
     );
   }
   /* return (
